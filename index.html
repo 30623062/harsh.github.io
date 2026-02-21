@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Harsh Ultimate Mixed Image Quiz</title>
+<style>
+body{
+font-family: Arial;
+text-align:center;
+background: linear-gradient(45deg,#ff6b6b,#6b6bff);
+color:white;
+}
+
+.quiz-box{
+background:white;
+color:black;
+width:450px;
+margin:50px auto;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 20px black;
+}
+
+img{
+width:250px;
+height:200px;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+button{
+display:block;
+margin:8px auto;
+padding:12px;
+width:90%;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#6b6bff;
+color:white;
+font-size:16px;
+}
+
+button:hover{
+background:#ff6b6b;
+}
+
+#score{
+margin-top:10px;
+font-weight:bold;
+font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🔥 Harsh Ultimate Mixed Quiz 🔥</h1>
+
+<div class="quiz-box">
+<img id="quizImage" src="">
+<h3 id="question"></h3>
+<div id="answers"></div>
+<p id="score">Score: 0</p>
+</div>
+
+<script>
+// All mixed questions
+let quizData=[
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/4/41/India_Gate_in_New_Delhi_03-2016.jpg",
+question:"Yeh kaunsa monument hai?",
+answers:["Taj Mahal","India Gate","Red Fort","Qutub Minar"],
+correct:1
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg",
+question:"Yeh kaunsa animal hai?",
+answers:["Dog","Wolf","Fox","Tiger"],
+correct:0
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/0/02/Stack_Overflow_logo.svg",
+question:"Yeh kaunsi website ka logo hai?",
+answers:["Google","GitHub","Stack Overflow","Microsoft"],
+correct:2
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/f/f3/Chris_Hemsworth_by_Gage_Skidmore_2.jpg",
+question:"Yeh kaunse actor hai?",
+answers:["Chris Evans","Chris Hemsworth","Robert Downey Jr","Tom Holland"],
+correct:1
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5c/Taj_Mahal_in_March_2004.jpg",
+question:"Yeh kaunsa monument hai?",
+answers:["Taj Mahal","Red Fort","Charminar","Qutub Minar"],
+correct:0
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/3/3c/Lion_waiting_in_Namibia.jpg",
+question:"Yeh kaunsa animal hai?",
+answers:["Tiger","Lion","Leopard","Elephant"],
+correct:1
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7c/MCU_Logo.svg",
+question:"Yeh kaunsi company ka logo hai?",
+answers:["Marvel","DC","Nintendo","Sony"],
+correct:0
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/0/01/Virat_Kohli_in_2019.jpg",
+question:"Yeh kaunse cricket player hai?",
+answers:["MS Dhoni","Virat Kohli","Rohit Sharma","KL Rahul"],
+correct:1
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/e/e0/Bengal_Tiger_in_Indian_Forest.jpg",
+question:"Yeh kaunsa animal hai?",
+answers:["Lion","Tiger","Leopard","Cheetah"],
+correct:1
+},
+{
+image:"https://upload.wikimedia.org/wikipedia/commons/4/42/Bhutan_Punakha_Dzong.jpg",
+question:"Yeh kaunsa monument hai?",
+answers:["Bhutan Dzong","Red Fort","Qutub Minar","Golden Temple"],
+correct:0
+}
+];
+
+// Shuffle questions randomly
+quizData.sort(()=>Math.random()-0.5);
+
+let current=0;
+let score=0;
+
+function loadQuestion(){
+if(current>=quizData.length){
+document.querySelector(".quiz-box").innerHTML=
+"<h2>🎉 Quiz Finished!</h2><p>Your Score: "+score+"/"+quizData.length+"</p>";
+return;
+}
+
+let q=quizData[current];
+document.getElementById("quizImage").src=q.image;
+document.getElementById("question").innerText=q.question;
+
+let ansHTML="";
+q.answers.forEach((ans,i)=>{
+ansHTML+=`<button onclick="check(${i})">${ans}</button>`;
+});
+document.getElementById("answers").innerHTML=ansHTML;
+}
+
+function check(i){
+if(i===quizData[current].correct){
+score++;
+}
+document.getElementById("score").innerText="Score: "+score;
+current++;
+loadQuestion();
+}
+
+loadQuestion();
+</script>
+
+</
