@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Harsh Ultimate Quiz</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: white;
+        }
+        .quiz-box {
+            background: white;
+            color: black;
+            padding: 20px;
+            width: 380px;
+            margin: 60px auto;
+            border-radius: 20px;
+            box-shadow: 0 0 20px black;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 12px;
+            width: 95%;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background: #dd2476;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        button:hover {
+            background: #ff512f;
+        }
+        #score {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🔥 Harsh Ultimate Quiz 🔥</h1>
+
+<div class="quiz-box">
+    <h3 id="question"></h3>
+    <div id="answers"></div>
+    <p id="score"></p>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "What is 5 + 3?",
+            answers: ["6", "7", "8", "9"],
+            correct: "8"
+        },
+        {
+            question: "Capital of India?",
+            answers: ["Mumbai", "Delhi", "Kolkata", "Chennai"],
+            correct: "Delhi"
+        },
+        {
+            question: "HTML stands for?",
+            answers: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "None"],
+            correct: "Hyper Text Markup Language"
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const questionEl = document.getElementById("question");
+        const answersEl = document.getElementById("answers");
+        answersEl.innerHTML = "";
+
+        questionEl.innerText = quizData[currentQuestion].question;
+
+        quizData[currentQuestion].answers.forEach(answer => {
+            const button = document.createElement("button");
+            button.innerText = answer;
+            button.onclick = () => checkAnswer(answer);
+            answersEl.appendChild(button);
+        });
+    }
+
+    function checkAnswer(answer) {
+        if(answer === quizData[currentQuestion].correct) {
+            score++;
+        }
+        currentQuestion++;
+
+        if(currentQuestion < quizData.length) {
+            loadQuestion();
+        } else {
+            document.querySelector(".quiz-box").innerHTML =
+                "<h2>🎉 Quiz Finished!</h2>" +
+                "<p>Your Score: " + score + " / " + quizData.length + "</p>";
+        }
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
