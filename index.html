@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Harsh ULTIMATE PRO 50+ MAX LEVEL Quiz</title>
+<style>
+body{
+  font-family:Arial; text-align:center; overflow-x:hidden; color:white;
+  background: linear-gradient(45deg,#ff512f,#dd2476,#fcb045,#fd1d1d);
+  background-size: 600% 600%;
+  animation: gradientMove 15s ease infinite;
+  margin:0;
+  height:100vh;
+  position:relative;
+}
+@keyframes gradientMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.quiz-box{
+  background:white;color:black;width:520px;margin:50px auto;padding:25px;
+  border-radius:20px;box-shadow:0 0 30px black;position:relative; z-index:10;
+}
+img{
+  width:250px;height:200px;border-radius:12px;margin-bottom:10px;
+  transition: transform 0.3s;
+}
+img.correct{transform: scale(1.1);}
+img.wrong{transform: rotate(15deg);}
+button{
+  display:block;margin:8px auto;padding:12px;width:90%;border:none;
+  border-radius:10px;cursor:pointer;background:#dd2476;color:white;font-size:16px;transition:0.2s;
+}
+button:hover{background:#ff512f;}
+.correct-btn{background:green !important;}
+.wrong-btn{background:red !important;}
+#score,#timer,#highscore{font-weight:bold;font-size:18px;}
+.firework{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none; z-index:5;}
+.particle{
+  position:absolute;
+  width:5px;
+  height:5px;
+  background:white;
+  border-radius:50%;
+  opacity:0.8;
+}
+.medal{font-size:40px;}
+</style>
+</head>
+<body>
+
+<h1>🔥 Harsh ULTIMATE PRO 50+ Quiz 🔥</h1>
+
+<div class="quiz-box">
+<img id="quizImage" src="">
+<h3 id="question"></h3>
+<div id="answers"></div>
+<p>⏳ Time Left: <span id="timer">15</span>s</p>
+<p>⭐ Score: <span id="score">0</span> | Highscore: <span id="highscore">0</span></p>
+<button onclick="restart()">♻ Restart Quiz</button>
+<div id="fireworks" class="firework"></div>
+</div>
+
+<script>
+// 3D Parallax effect
+document.addEventListener("mousemove", function(e){
+  let x = e.clientX / window.innerWidth - 0.5;
+  let y = e.clientY / window.innerHeight - 0.5;
+  document.body.style.backgroundPosition = `${50 + x*10}% ${50 + y*10}%`;
+});
+
+// Floating particles
+let particles=[];
+for(let i=0;i<60;i++){
+  let p=document.createElement("div");
+  p.className="particle";
+  p.style.top=Math.random()*window.innerHeight+"px";
+  p.style.left=Math.random()*window.innerWidth+"px";
+  document.body.appendChild(p);
+  particles.push({el:p,xSpeed:(Math.random()-0.5)*1.5,ySpeed:(Math.random()-0.5)*1.5});
+}
+function moveParticles(){
+  particles.forEach(pt=>{
+    let top=parseFloat(pt.el.style.top);
+    let left=parseFloat(pt.el.style.left);
+    top+=pt.ySpeed; left+=pt.xSpeed;
+    if(top>window.innerHeight) top=0; if(top<0) top=window.innerHeight;
+    if(left>window.innerWidth) left=0; if(left<0) left=window.innerWidth;
+    pt.el.style.top=top+"px"; pt.el.style.left=left+"px";
+  });
+  requestAnimationFrame(moveParticles);
+}
+moveParticles();
+
+// Sounds
+let correctSound=new Audio("https://freesound.org/data/previews/522/522331_6341665-lq.mp3");
+let wrongSound=new Audio("https://freesound.org/data/previews/276/276020_5121236-lq.mp3");
+
+// MAX LEVEL Questions (sample 15, add more to 50+)
+let quizData=[
+{image:"https://upload.wikimedia.org/wikipedia/commons/4/41/India_Gate_in_New_Delhi_03-2016.jpg",question:"Yeh kaunsa monument hai?",answers:["Taj Mahal","India Gate","Red Fort","Qutub Minar"],correct:1},
+{image:"https://upload.wikimedia.org/wikipedia/commons/e/e0/Bengal_Tiger_in_Indian_Forest.jpg",question:"Yeh kaunsa animal hai?",answers:["Lion","Tiger","Leopard","Cheetah"],correct:1},
+{image:"https://upload.wikimedia.org/wikipedia/commons/2/2f/Axolotl.jpg",question:"Yeh kaunsa rare amphibian hai?",answers:["Axolotl","Salamander","Newt","Gecko"],correct:0},
+{image:"https://upload.wikimedia.org/wikipedia/commons/8/88/Petrapanorama.jpg",question:"Yeh kaunsa monument hai carved in rock?",answers:["Petra","Taj Mahal","Colosseum","Great Wall of China"],correct:0},
+{image:"https://upload.wikimedia.org/wikipedia/commons/7/79/Master_Chief_Halo.png",question:"Yeh character kis game series se hai?",answers:["Halo","Call of Duty","Fortnite","Apex Legends"],correct:0},
+{image:"https://upload.wikimedia.org/wikipedia/commons/8/84/Samus_Aran.png",question:"Yeh female protagonist kis franchise se hai?",answers:["Metroid","Zelda","Mario","Bayonetta"],correct:0},
+{image:"https://upload.wikimedia.org/wikipedia/commons/1/1f/Eiffel_Tower_in_Paris.jpg",question:"Yeh kaunsa monument hai?",answers:["Eiffel Tower","Statue of Liberty","Big Ben","Colosseum"],correct:0},
+{image:"https://upload.wikimedia.org/wikipedia/commons/5/51/Neil_Armstrong_-_Apollo_11.jpg",question:"Yeh astronaut kaun hai?",answers:["Neil Armstrong","Buzz Aldrin","Yuri Gagarin","John Glenn"],correct:0},
+{image:"https://upload.wikimedia.org/wikipedia/commons/4/4d/Albert_Einstein_Head.jpg",question:"Yeh famous scientist kaun hai?",answers:["Newton","Einstein","Tesla","Galileo"],correct:1},
+{image:"https://upload.wikimedia.org/wikipedia/commons/0/01/Virat_Kohli_in_2019.jpg",question:"Yeh kaunse cricket player hai?",answers:["MS Dhoni","Virat Kohli","Rohit Sharma","KL Rahul"],correct:1}
+];
+
+// Shuffle
+quizData.sort(()=>Math.random()-0.5);
+
+let current=0,score=0,time=15,highscore=localStorage.getItem("highscore")||0,timer,streak=0;
+document.getElementById("highscore").innerText=highscore;
+
+function loadQuestion(){
+if(current>=quizData.length){
+showFireworks();
+if(score>highscore){localStorage.setItem("highscore",score);}
+let medal="";
+let percent=(score/quizData.length)*100;
+if(percent>=90) medal="🥇"; else if(percent>=70) medal="🥈"; else if(percent>=50) medal="🥉"; 
+document.querySelector(".quiz-box").innerHTML=
+"<h2>🎉 Quiz Finished!</h2><p>Your Score: "+score+"/"+quizData.length+"</p>"+
+"<p>Highscore: "+Math.max(score,highscore)+" "+medal+"</p>"+
+"<button onclick='restart()'>♻ Restart Quiz</button>";
+return;
+}
+
+time=15;
+document.getElementById("timer").innerText=time;
+clearInterval(timer);
+timer=setInterval(()=>{
+time--;
+document.getElementById("timer").innerText=time;
+if(time<=0){clearInterval(timer);nextQuestion();}
+},1000);
+
+let q=quizData[current];
+document.getElementById("quizImage").src=q.image;
+document.getElementById("question").innerText=q.question;
+
+let ansHTML="";
+q.answers.forEach((ans,i)=>{
+ansHTML+=`<button onclick="check(${i},this)">${ans}</button>`;
+});
+document.getElementById("answers").innerHTML=ansHTML;
+}
+
+function check(i,btn){
+clearInterval(timer);
+let correctIndex=quizData[current].correct;
+if(i===correctIndex){
+score++; streak++;
+if(streak>=2) score+=1; // streak bonus
+document.getElementById("score").innerText="Score: "+score;
+btn.classList.add("correct-btn");
+correctSound.play();
+}else{
+streak=0;
+btn.classList.add("wrong-btn");
+wrongSound.play();
+}
+setTimeout(()=>{nextQuestion();},500);
+}
+
+function nextQuestion(){current++;loadQuestion();}
+function restart(){current=0;score=0;streak=0;document.getElementById("score").innerText=score;loadQuestion();}
+
+function showFireworks(){
+let f=document.getElementById("fireworks");
+f.innerHTML="";
+for(let i=0;i<30;i++){
+  let fire=document.createElement("div");
+  fire.style.position="absolute";
+  fire.style.width="8px";
+  fire.style.height="8px";
+  fire.style.background=["red","yellow","blue","green","orange"][Math.floor(Math.random()*5)];
+  fire.style.borderRadius="50%";
+  fire.style.left=Math.random()*window.innerWidth+"px";
+  fire.style.top=Math.random()*window.innerHeight+"px";
+  f.appendChild(fire);
+}
+setTimeout(()=>{f.innerHTML="";},3000);
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
